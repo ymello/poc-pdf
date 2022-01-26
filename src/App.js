@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
 
-function App() {
+import SinglePagePDFViewer from "./components/pdf/single-page";
+import AllPagesPDFViewer from "./components/pdf/all-pages";
+import samplePDF from "./sample.pdf";
+
+import "./styles.css";
+
+export default function App() {
+  const [pdf, setPdf] = React.useState(samplePDF);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input
+        type="file"
+        onChange={(e) => {
+          const file = e.target.files[0];
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => {
+            setPdf(reader.result);
+          };
+        }}
+      />
+
+      <h4>Single Page</h4>
+      <SinglePagePDFViewer pdf={pdf} />
+
+      <hr />
+
+      <h4>All Pages</h4>
+      <div className="all-page-container">
+        <AllPagesPDFViewer pdf={pdf} />
+      </div>
+
+      <hr />
+
+      <h4>Base 64 Single Page</h4>
+      <SinglePagePDFViewer pdf={pdf} />
+
+      <hr />
     </div>
   );
 }
-
-export default App;
